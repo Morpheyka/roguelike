@@ -2,7 +2,7 @@
 
 public static class TextureGenerator
 {
-    public static Texture2D CreateTerrainTexture(float[,] map, Color lower, Color hight)
+    public static Texture2D CreateHightMapTexture(WorldTile[,] map, Color lower, Color hight)
     {
         int width = map.GetLength(0);
         int height = map.GetLength(1);
@@ -17,7 +17,7 @@ public static class TextureGenerator
 
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
-                colourMap[y * width + x] = Color.Lerp(lower, hight, map[x, y]);
+                colourMap[y * width + x] = Color.Lerp(lower, hight, map[x, y].Height);
 
         texture.SetPixels(colourMap);
         texture.Apply();
@@ -25,7 +25,7 @@ public static class TextureGenerator
         return texture;
     }
 
-    public static Texture2D CreateColourTerrainTexture(Vector2Int size, Color[] colours)
+    public static Texture2D CreateColourHightMapTexture(Vector2Int size, Color[] colours)
     {
         Texture2D texture = new Texture2D(size.x, size.y)
         {

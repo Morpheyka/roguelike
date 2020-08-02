@@ -693,12 +693,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heightNoise:
-    Scale: 25
-    Octaves: 5
-    Persistance: 0.5
-    Lacunarity: 2
+    scale: 25
+    octaves: 5
+    persistance: 0.25
+    lacunarity: 2
+    useFalloff: 1
   _worldData:
-    Size: {x: 128, y: 128}
+    size: {x: 128, y: 128}
+  _terrains: {fileID: 11400000, guid: c98e6223e90f34b48b01c8cfe368e6dd, type: 2}
 --- !u!4 &2007717126
 Transform:
   m_ObjectHideFlags: 0
@@ -725,11 +727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1336e465aa7825e4ebe1c551011277aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _texturePrefab: {fileID: 8696595344586731251, guid: 49e595ccf74d1094eafd6837013487cb,
-    type: 3}
   _meshPrefab: {fileID: 1801231520283355336, guid: 4511cc1655f26d2438b602a41f3ca575,
     type: 3}
-  _mode: 2
   _config: {fileID: 11400000, guid: c98e6223e90f34b48b01c8cfe368e6dd, type: 2}
   _heightMultiplier: 10
   _heightCurve:
@@ -765,7 +764,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _useFallow: 1
 --- !u!114 &2007717128
 MonoBehaviour:
   m_ObjectHideFlags: 0

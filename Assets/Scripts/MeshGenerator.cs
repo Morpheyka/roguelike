@@ -2,10 +2,10 @@
 
 public static class MeshGenerator
 {
-    public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
+    public static MeshData GenerateWorldMeshData(WorldTile[,] tiles, Vector2Int size, float heightMultiplier, AnimationCurve heightCurve)
     {
-        int width = heightMap.GetLength(0);
-        int height = heightMap.GetLength(1);
+        int width = size.x;
+        int height = size.y;
         float topLeftX = (width - 1) * -0.5f;
         float topLeftZ = (height - 1) * 0.5f;
 
@@ -16,7 +16,7 @@ public static class MeshGenerator
         {
             for (int x = 0; x < width; x++)
             {
-                data.Vericles[vertexIndex] = new Vector3(topLeftX + x, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, topLeftZ - y);
+                data.Vericles[vertexIndex] = new Vector3(topLeftX + x, heightCurve.Evaluate(tiles[x, y].Height) * heightMultiplier, topLeftZ - y);
                 data.Uvs[vertexIndex] = new Vector2(x / (float)width, y / (float)height);
 
                 if(x < width - 1 && y < height - 1)
@@ -32,21 +32,6 @@ public static class MeshGenerator
         return data;
     }
 
-    public static Mesh GenerateMesh(MeshData data)
-    {
-        Mesh target = new Mesh
-        {
-            vertices = data.Vericles,
-            triangles = data.Triangles,
-            uv = data.Uvs
-        };
-
-        target.RecalculateNormals();
-
-        return target;
-    }
-
-
     public class MeshData
     {
         public Vector3[] Vericles { get; private set; }
@@ -60,6 +45,20 @@ public static class MeshGenerator
             Vericles = new Vector3[widht * height];
             Uvs = new Vector2[widht * height];
             Triangles = new int[(widht - 1) * (height - 1) * 6];
+        }
+
+        public Mesh Generate()
+        {
+            Mesh target = new Mesh
+            {
+                vertices = Vericles,
+                triangles = Triangles,
+                uv = Uvs
+            };
+
+            target.RecalculateNormals();
+
+            return target;
         }
 
         public void AddTriangle(int a, int b, int c)

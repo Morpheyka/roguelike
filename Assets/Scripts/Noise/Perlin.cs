@@ -7,9 +7,9 @@ public class Perlin
         float[,] noise = new float[size.x, size.y];
 
         System.Random prnd = new System.Random(seed);
-        Vector2[] octavesOffset = new Vector2[data.Octaves];
+        Vector2[] octavesOffset = new Vector2[data.octaves];
 
-        for (int i = 0; i < data.Octaves; i++)
+        for (int i = 0; i < data.octaves; i++)
         {
             float offsetX = prnd.Next(-100000, 100000);
             float offsetY = prnd.Next(-100000, 100000);
@@ -17,8 +17,8 @@ public class Perlin
             octavesOffset[i] = new Vector2(offsetX, offsetY);
         }
 
-        if (data.Scale <= 0f)
-            data.Scale = 0.001f;
+        if (data.scale <= 0f)
+            data.scale = 0.001f;
 
         float minNoiseHeight = float.MaxValue;
         float maxNoiseHeight = float.MinValue;
@@ -34,16 +34,16 @@ public class Perlin
                 float frequence = 1f;
                 float noiseHeight = 0f;
 
-                for (int i = 0; i < data.Octaves; i++)
+                for (int i = 0; i < data.octaves; i++)
                 {
-                    float nx = (x - halfWidht) / data.Scale * frequence + octavesOffset[i].x;
-                    float ny = (y - halfHeight) / data.Scale * frequence + octavesOffset[i].y;
+                    float nx = (x - halfWidht) / data.scale * frequence + octavesOffset[i].x;
+                    float ny = (y - halfHeight) / data.scale * frequence + octavesOffset[i].y;
 
                     float perlinValue = Mathf.PerlinNoise(nx, ny) * 2f - 1f;
                     noiseHeight += perlinValue * amplitute;
 
-                    amplitute *= data.Persistance;
-                    frequence *= data.Lacunarity;
+                    amplitute *= data.persistance;
+                    frequence *= data.lacunarity;
                 }
 
                 if (noiseHeight > maxNoiseHeight)
@@ -65,9 +65,10 @@ public class Perlin
     [System.Serializable]
     public class Data
     {
-        [Range(1.1f, 100f)] public float Scale = 1.1f;
-        [Range(0, 100)] public int Octaves = 1;
-        [Range(0.001f, 1f)] public float Persistance = 1f;
-        [Range(0.001f, 100f)] public float Lacunarity = 1f;
+        [Range(1.1f, 100f)] public float scale = 25f;
+        [Range(0, 100)] public int octaves = 5;
+        [Range(0.001f, 1f)] public float persistance = 0.5f;
+        [Range(0.001f, 100f)] public float lacunarity = 2f;
+        public bool useFalloff = true;
     }
 }

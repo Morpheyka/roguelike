@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class WorldData
 {
-    public Vector2Int Size = default;
-    public float[,] HeightMap = null;
-    public float[,] ClimateMap = null;
-    public float[,] HumidityMap = null;
-    public float[,] FalloffMap = null;
+    public Vector2Int size = default;
+    public WorldTile[,] tiles = null;
+
+    public List<TerrainGroup> water = new List<TerrainGroup>();
+    public List<TerrainGroup> land = new List<TerrainGroup>();
 }

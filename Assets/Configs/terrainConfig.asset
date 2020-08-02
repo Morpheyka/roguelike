@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b03de77c8574d8e489107a526c86d055, type: 3}
   m_Name: terrainConfig
   m_EditorClassIdentifier: 
-  regions: []
+  regions:
+  - type: 0
+    heightLimit: 0.1
+    colour: {r: 0.032796368, g: 0.0891991, b: 0.6320754, a: 0}
+  - type: 1
+    heightLimit: 0.15
+    colour: {r: 0.16838734, g: 0.5168467, b: 0.8301887, a: 0}
+  - type: 2
+    heightLimit: 0.2
+    colour: {r: 0.754717, g: 0.7078882, b: 0.35955858, a: 0}
+  - type: 3
+    heightLimit: 0.4
+    colour: {r: 0.3523051, g: 0.8584906, b: 0.40920123, a: 0}
