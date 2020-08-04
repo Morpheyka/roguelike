@@ -2,8 +2,9 @@
 public class WorldTile
 {
     public float Height { get; private set; }
-    public float Temperature { get; private set;}
+    public float Heat { get; private set;}
     public float Humidity { get; private set; }
+    public int Mask => _bitMask;
 
     public Terrain terrain = default;
     public WorldTile leftNeighbour = null;
@@ -15,12 +16,12 @@ public class WorldTile
     public bool alreadyFilled = false;
     private int _bitMask = 0;
 
-    public WorldTile(Terrain terrain, float height, float temperature, float humidity)
+    public WorldTile(Terrain terrain, float height, float heat, float humidity)
     {
         this.terrain = terrain;
 
         Height = height;
-        Temperature = temperature;
+        Heat = heat;
         Humidity = humidity;
     }
 
@@ -28,16 +29,16 @@ public class WorldTile
     {
         int count = 0;
 
-        if (topNeighbour.terrain == terrain)
+        if (leftNeighbour != null && leftNeighbour.terrain == terrain)
             count++;
 
-        if (rightNeighbour.terrain == terrain)
+        if (rightNeighbour != null && rightNeighbour.terrain == terrain)
             count += 2;
 
-        if (bottomNeighbour.terrain == terrain)
+        if (bottomNeighbour != null && bottomNeighbour.terrain == terrain)
             count += 4;
 
-        if (topNeighbour.terrain == terrain)
+        if (topNeighbour != null && topNeighbour.terrain == terrain)
             count += 8;
 
         _bitMask = count;

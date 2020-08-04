@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using AccidentalNoise;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,7 +47,7 @@ public class WorldGenerator : MonoBehaviour
                     break;
                 }
 
-                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], 0f, 0f);
+                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], 26f, 0f);
 
                 int px = x - 1 < 0 ? -1 : x - 1;
                 int nx = x + 1 == width ? -1 : x + 1;
@@ -62,6 +62,7 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
+        FillGroups();
 
         GetComponent<WorldDisplay>().Draw(_worldData.tiles, _worldData.size);
     }
@@ -92,7 +93,7 @@ public class WorldGenerator : MonoBehaviour
                     tileStack.Push(current);
 
                     while (tileStack.Count > 0)
-                        FillGroups(tileStack.Pop(), group, tileStack);
+                        FillGroups(tileStack.Pop(), ref group, ref tileStack);
 
                     if (group.tiles.Count > 0)
                         _worldData.land.Add(group);
@@ -107,7 +108,7 @@ public class WorldGenerator : MonoBehaviour
                     tileStack.Push(current);
 
                     while (tileStack.Count > 0)
-                        FillGroups(tileStack.Pop(), group, tileStack);
+                        FillGroups(tileStack.Pop(), ref group, ref tileStack);
 
                     if (group.tiles.Count > 0)
                         _worldData.water.Add(group);
@@ -116,7 +117,7 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    private void FillGroups(WorldTile tile, TerrainGroup group, Stack<WorldTile> stack)
+    private void FillGroups(WorldTile tile, ref TerrainGroup group, ref Stack<WorldTile> stack)
     {
         if (tile.alreadyFilled)
             return;
@@ -130,6 +131,23 @@ public class WorldGenerator : MonoBehaviour
         group.tiles.Add(tile);
         tile.alreadyFilled = true;
 
-        //
+        WorldTile t = tile.topNeighbour;
+        bool sameGroupAndNotNull = t != null && !t.alreadyFilled 
+            && tile.isCollidable == t.isCollidable;
+
+        if (sameGroupAndNotNull)
+            stack.Push(t);
+
+        t = tile.bottomNeighbour;
+        if (sameGroupAndNotNull)
+            stack.Push(t);
+
+        t = tile.leftNeighbour;
+        if (sameGroupAndNotNull)
+            stack.Push(t);
+
+        t = tile.rightNeighbour;
+        if (sameGroupAndNotNull)
+            stack.Push(t);
     }
 }

@@ -35,6 +35,6 @@ public class WorldTimer
             CurrentDay++;
         }
 
-        Debug.Log($"Time {CurrentDay} : {CurrentHour} : {CurrentMinutes}");
+        //Debug.Log($"Time {CurrentDay} : {CurrentHour} : {CurrentMinutes}");
     }
 }

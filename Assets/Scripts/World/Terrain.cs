@@ -5,14 +5,17 @@ public class Terrain
 {
     public TerrainType type;
     public float heightLimit;
+    public float heatLimit;
     public Color colour;
 }
 
 public enum TerrainType
 {
-    Ocean,
-    Lake,
-    Beatch,
+    DeepWater,
+    Water,
+    Coast,
+    Plane,
     Land,
+    Hill,
     Mountain
 }

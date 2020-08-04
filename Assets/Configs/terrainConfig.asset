@@ -15,13 +15,77 @@ MonoBehaviour:
   regions:
   - type: 0
     heightLimit: 0.1
-    colour: {r: 0.032796368, g: 0.0891991, b: 0.6320754, a: 0}
+    heatLimit: 0
+    colour: {r: 0.4669811, g: 0.88141453, b: 1, a: 0}
+  - type: 0
+    heightLimit: 0.1
+    heatLimit: 50
+    colour: {r: 0, g: 0.18249997, b: 0.9433962, a: 0}
   - type: 1
-    heightLimit: 0.15
-    colour: {r: 0.16838734, g: 0.5168467, b: 0.8301887, a: 0}
-  - type: 2
     heightLimit: 0.2
-    colour: {r: 0.754717, g: 0.7078882, b: 0.35955858, a: 0}
+    heatLimit: 0
+    colour: {r: 0.6179246, g: 0.9157187, b: 1, a: 0}
+  - type: 1
+    heightLimit: 0.2
+    heatLimit: 50
+    colour: {r: 0.25943398, g: 0.40385967, b: 1, a: 0}
+  - type: 2
+    heightLimit: 0.3
+    heatLimit: 0
+    colour: {r: 1, g: 0.9601966, b: 0.6462264, a: 0}
+  - type: 2
+    heightLimit: 0.3
+    heatLimit: 25
+    colour: {r: 1, g: 0.947065, b: 0.5235849, a: 0}
+  - type: 2
+    heightLimit: 0.3
+    heatLimit: 50
+    colour: {r: 1, g: 0.9240042, b: 0.3160377, a: 0}
   - type: 3
-    heightLimit: 0.4
-    colour: {r: 0.3523051, g: 0.8584906, b: 0.40920123, a: 0}
+    heightLimit: 0.45
+    heatLimit: 0
+    colour: {r: 0.50881267, g: 1, b: 0.3176471, a: 0}
+  - type: 3
+    heightLimit: 0.45
+    heatLimit: 25
+    colour: {r: 0.16209263, g: 0.6603774, b: 0, a: 0}
+  - type: 3
+    heightLimit: 0.45
+    heatLimit: 50
+    colour: {r: 0.990566, g: 0.927163, b: 0.06074228, a: 0}
+  - type: 4
+    heightLimit: 0.65
+    heatLimit: 0
+    colour: {r: 0.632327, g: 1, b: 0.6273585, a: 0}
+  - type: 4
+    heightLimit: 0.65
+    heatLimit: 25
+    colour: {r: 0.02743161, g: 0.4433962, b: 0.02300641, a: 0}
+  - type: 4
+    heightLimit: 0.65
+    heatLimit: 50
+    colour: {r: 0.7075472, g: 0.65700805, b: 0, a: 0}
+  - type: 5
+    heightLimit: 0.8
+    heatLimit: 0
+    colour: {r: 0.509434, g: 0.44953874, b: 0.33882165, a: 0}
+  - type: 5
+    heightLimit: 0.8
+    heatLimit: 25
+    colour: {r: 0.3773585, g: 0.25959033, b: 0.1548594, a: 0}
+  - type: 5
+    heightLimit: 0.8
+    heatLimit: 50
+    colour: {r: 0.49056602, g: 0.37775895, b: 0.15966536, a: 0}
+  - type: 6
+    heightLimit: 1
+    heatLimit: 0
+    colour: {r: 1, g: 1, b: 1, a: 0}
+  - type: 6
+    heightLimit: 1
+    heatLimit: 25
+    colour: {r: 0.24528301, g: 0.18017448, b: 0.056692775, a: 0}
+  - type: 6
+    heightLimit: 1
+    heatLimit: 50
+    colour: {r: 0.23584908, g: 0.19628927, b: 0.12126203, a: 0}

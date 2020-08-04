@@ -220,7 +220,7 @@ Camera:
   far clip plane: 250
   field of view: 60
   orthographic: 1
-  orthographic size: 70
+  orthographic size: 120
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -693,13 +693,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heightNoise:
-    scale: 25
-    octaves: 5
-    persistance: 0.25
-    lacunarity: 2
+    scale: 30
+    octaves: 6
+    persistance: 0.3
+    lacunarity: 2.5
     useFalloff: 1
   _worldData:
-    size: {x: 128, y: 128}
+    size: {x: 256, y: 256}
   _terrains: {fileID: 11400000, guid: c98e6223e90f34b48b01c8cfe368e6dd, type: 2}
 --- !u!4 &2007717126
 Transform:
@@ -744,19 +744,19 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.4419137
-      value: 0.09194603
-      inSlope: 0.6972745
-      outSlope: 0.6972745
+      time: 0.32085544
+      value: 0.042334903
+      inSlope: 0.5687309
+      outSlope: 0.5687309
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.063746445
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0

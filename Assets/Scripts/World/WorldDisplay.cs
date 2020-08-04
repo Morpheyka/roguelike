@@ -49,12 +49,16 @@ public class WorldDisplay : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                float currentHeight = tiles[x, y].Height;
                 float regionsCount = _config.regions.Length;
+                float currentHeight = tiles[x, y].Height;
+                float currentHeat = tiles[x, y].Heat;
 
                 for (int i = 0; i < regionsCount; i++)
                 {
                     if (currentHeight > _config.regions[i].heightLimit)
+                        continue;
+
+                    if (currentHeat > _config.regions[i].heatLimit)
                         continue;
 
                     colourMap[y * width + x] = _config.regions[i].colour;
