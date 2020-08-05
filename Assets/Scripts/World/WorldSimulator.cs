@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldSimulator : MonoBehaviour
@@ -7,12 +6,12 @@ public class WorldSimulator : MonoBehaviour
     [SerializeField] private WorldConfig _config = null;
 
     private WaitForSecondsRealtime _cycleStep = null;
-    private readonly WorldTimer _time = new WorldTimer();
+    private WorldTimer _time = null;
 
     private void Awake()
     {
         _cycleStep = new WaitForSecondsRealtime(_config.time.timeScale);
-        _time.Init(_config.time);
+        _time = new WorldTimer(_config.time);
     }
 
     private void Start()

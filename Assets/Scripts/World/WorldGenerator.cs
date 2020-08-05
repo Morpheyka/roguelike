@@ -47,7 +47,7 @@ public class WorldGenerator : MonoBehaviour
                     break;
                 }
 
-                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], 26f, 0f);
+                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], 20f, 0f);
 
                 int px = x - 1 < 0 ? -1 : x - 1;
                 int nx = x + 1 == width ? -1 : x + 1;

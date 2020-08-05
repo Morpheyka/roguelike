@@ -12,3 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f937f11fa1e62b8478d4bd14d68fce32, type: 3}
   m_Name: worldConfig
   m_EditorClassIdentifier: 
+  time:
+    timeScale: 0.33
+    minutesPerSimulate: 3
+    seasons:
+    - name: Spring
+      minHeat: 0
+      maxHeat: 0
+      months:
+      - name: 1
+        daysCount: 28
+      - name: 2
+        daysCount: 31
+      - name: 3
+        daysCount: 29
+    - name: Summer
+      minHeat: 0
+      maxHeat: 0
+      months:
+      - name: 4
+        daysCount: 29
+      - name: 5
+        daysCount: 31
+      - name: 6
+        daysCount: 30
+    - name: Autumn
+      minHeat: 0
+      maxHeat: 0
+      months:
+      - name: 7
+        daysCount: 27
+      - name: 8
+        daysCount: 31
+      - name: 9
+        daysCount: 30
+    - name: Winter
+      minHeat: 0
+      maxHeat: 0
+      months:
+      - name: 10
+        daysCount: 31
+      - name: 11
+        daysCount: 33
+      - name: 12
+        daysCount: 30
