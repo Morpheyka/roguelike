@@ -1,5 +1,4 @@
-﻿using AccidentalNoise;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
@@ -10,7 +9,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private WorldData _worldData = null;
     [SerializeField] private TerrainConfig _terrains = null;
 
-    public void Generate(int seed)
+    public WorldData Generate(int seed)
     {
         _worldData.tiles = new WorldTile[_worldData.size.x, _worldData.size.y];
 
@@ -47,7 +46,9 @@ public class WorldGenerator : MonoBehaviour
                     break;
                 }
 
-                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], 20f, 0f);
+                int heatValue = Mathf.RoundToInt(heightMap[x, y] * -10f); 
+
+                _worldData.tiles[x, y] = new WorldTile(terrain, heightMap[x, y], heatValue, 0f);
 
                 int px = x - 1 < 0 ? -1 : x - 1;
                 int nx = x + 1 == width ? -1 : x + 1;
@@ -65,6 +66,8 @@ public class WorldGenerator : MonoBehaviour
         FillGroups();
 
         GetComponent<WorldDisplay>().Draw(_worldData.tiles, _worldData.size);
+
+        return _worldData;
     }
 
     private void FillGroups()

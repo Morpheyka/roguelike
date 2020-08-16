@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class WorldTimer
 {
+    public event Action OnDayChange;
+
     public uint CurrentMinutes { get; private set; } = 0;
     public uint CurrentHour { get; private set; } = 0;
     public uint CurrentDay { get; private set; } = 1;
@@ -43,6 +46,8 @@ public class WorldTimer
         {
             CurrentHour = 0;
             CurrentDay++;
+
+            OnDayChange?.Invoke();
         }
 
         if(CurrentDay > DaysInMonth)

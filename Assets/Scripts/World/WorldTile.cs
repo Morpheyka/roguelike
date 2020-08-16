@@ -43,4 +43,9 @@ public class WorldTile
 
         _bitMask = count;
     }
+
+    public void IncHeat(int value)
+    {
+        Heat += value;
+    }
 }
