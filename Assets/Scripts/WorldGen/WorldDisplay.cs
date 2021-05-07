@@ -29,7 +29,7 @@ public class WorldDisplay : MonoBehaviour
             heightCurve,
             world.WorldParameters.SeaLevel,
             heightMultiplier);
-
+        
         textures = new Dictionary<DrawMode, Texture2D>
         {
             {DrawMode.Normal, GenerateClimateTexture()},
@@ -38,16 +38,12 @@ public class WorldDisplay : MonoBehaviour
             {DrawMode.Rain, GenerateTextureFromGradient(rainGradient, world.RainMap)}
         };
 
-        OnDrawModeChanged();
+        var subMeshMaterials = new Material[meshFilter.mesh.subMeshCount];
 
-        meshRenderer.sharedMaterials = new Material[meshFilter.mesh.subMeshCount];
+        for (int i = 0; i < subMeshMaterials.Length; i++)
+            subMeshMaterials[i] = worldMaterial;
 
-        for (int i = 0; i < meshRenderer.materials.Length; i++)
-            meshRenderer.sharedMaterials[i] = new Material(worldMaterial);
-    }
-
-    private void OnDrawModeChanged()
-    {
+        meshRenderer.materials = subMeshMaterials;
         worldMaterial.SetTexture(WorldTextureId, textures[drawMode]);
     }
 

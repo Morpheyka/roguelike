@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6be9b004b90d24fb725acb949361b2, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  width: 512
-  height: 512
+  width: 128
+  height: 128
   heightParameters:
     octaves: 4
     persistance: 0.35
