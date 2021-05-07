@@ -1,135 +1,142 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-    public class WorldDisplay : MonoBehaviour {
-        [SerializeField]
-        private DrawMode drawMode;
+public class WorldDisplay : MonoBehaviour
+{
+    [SerializeField] private DrawMode drawMode;
+    [SerializeField] private bool drawSlope;
+    [SerializeField] private float slopeMultiplier;
 
-        [SerializeField]
-        private bool drawSlope;
+    // Mesh
+    [SerializeField] private MeshFilter meshFilter;
+    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private AnimationCurve heightCurve;
+    [SerializeField] private float heightMultiplier;
 
-        [SerializeField]
-        private float slopeMultiplier;
+    // Gradients
+    [SerializeField] private Gradient heightGradient, tempGradient, rainGradient;
+    [SerializeField] private Material worldMaterial;
 
-        // Mesh
-        [SerializeField]
-        private MeshFilter meshFilter;
+    private static readonly int WorldTextureId = Shader.PropertyToID("_WorldTexture");
+    private Dictionary<DrawMode, Texture2D> textures;
 
-        [SerializeField]
-        private AnimationCurve heightCurve;
+    public void OnWorldGenerated()
+    {
+        var world = World.Current;
 
-        [SerializeField]
-        private float heightMultiplier;
+        meshFilter.mesh = MeshGenerator.GenerateTerrainMesh(
+            world.HeightMap,
+            heightCurve,
+            world.WorldParameters.SeaLevel,
+            heightMultiplier);
 
-        // Gradients
-        [SerializeField]
-        private Gradient heightGradient, tempGradient, rainGradient;
+        textures = new Dictionary<DrawMode, Texture2D>
+        {
+            {DrawMode.Normal, GenerateClimateTexture()},
+            {DrawMode.Height, GenerateTextureFromGradient(heightGradient, world.HeightMap)},
+            {DrawMode.Temperature, GenerateTextureFromGradient(tempGradient, world.TempMap)},
+            {DrawMode.Rain, GenerateTextureFromGradient(rainGradient, world.RainMap)}
+        };
 
-        [SerializeField]
-        private Material worldMaterial;
+        OnDrawModeChanged();
 
-        private static readonly int WorldTextureId = Shader.PropertyToID("_WorldTexture");
+        meshRenderer.sharedMaterials = new Material[meshFilter.mesh.subMeshCount];
 
-        private Dictionary<DrawMode, Texture2D> textures;
+        for (int i = 0; i < meshRenderer.materials.Length; i++)
+            meshRenderer.sharedMaterials[i] = new Material(worldMaterial);
+    }
 
-        public void OnWorldGenerated() {
-            var world = World.Current;
-            
-            meshFilter.mesh = MeshGenerator.GenerateTerrainMesh(
-                world.HeightMap,
-                heightCurve,
-                world.WorldParameters.SeaLevel,
-                heightMultiplier
-            )[0, 0];
+    private void OnDrawModeChanged()
+    {
+        worldMaterial.SetTexture(WorldTextureId, textures[drawMode]);
+    }
 
-            textures = new Dictionary<DrawMode, Texture2D> {
-                {DrawMode.Normal, GenerateClimateTexture()},
-                {DrawMode.Height, GenerateTextureFromGradient(heightGradient, world.HeightMap)},
-                {DrawMode.Temperature, GenerateTextureFromGradient(tempGradient, world.TempMap)},
-                {DrawMode.Rain, GenerateTextureFromGradient(rainGradient, world.RainMap)}
-            };
+    private static Texture2D GenerateTextureFromGradient(Gradient gradient, float[,] map)
+    {
+        var width = World.Current.WorldParameters.Width;
+        var height = World.Current.WorldParameters.Height;
 
-            OnDrawModeChanged();
-        }
+        var pixels = new Color[width * height];
 
-        private void OnDrawModeChanged() {
-            worldMaterial.SetTexture(WorldTextureId, textures[drawMode]);
-        }
+        for (var x = 0; x < width; x++)
+        for (var y = 0; y < height; y++)
+            pixels[x + y * width] = gradient.Evaluate(map[x, y]);
 
-        private static Texture2D GenerateTextureFromGradient(Gradient gradient, float[,] map) {
-            var width = World.Current.WorldParameters.Width;
-            var height = World.Current.WorldParameters.Height;
+        var texture = new Texture2D(width, height);
+        texture.SetPixels(pixels);
+        texture.Apply();
 
-            var pixels = new Color[width * height];
-            for (var x = 0; x < width; x++) {
-                for (var y = 0; y < height; y++) {
-                    pixels[x + y * width] = gradient.Evaluate(map[x, y]);
+        return texture;
+    }
+
+    private static Texture2D GenerateClimateTexture()
+    {
+        var width = World.Current.WorldParameters.Width;
+        var height = World.Current.WorldParameters.Height;
+
+        var pixels = new Color[width * height];
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                Climate climate;
+
+                try
+                {
+                    climate = World.Current.GetClimate(x, y);
                 }
-            }
-
-            var texture = new Texture2D(width, height);
-            texture.SetPixels(pixels);
-            texture.Apply();
-            return texture;
-        }
-
-        private static Texture2D GenerateClimateTexture() {
-            var width = World.Current.WorldParameters.Width;
-            var height = World.Current.WorldParameters.Height;
-
-            var pixels = new Color[width * height];
-            for (var x = 0; x < width; x++) {
-                for (var y = 0; y < height; y++) {
-                    Climate climate;
-
-                    try {
-                        climate = World.Current.GetClimate(x, y);
-                    }
-                    catch (System.IndexOutOfRangeException) {
-                        Debug.Log(x + ", " + y);
-                        throw;
-                    }
-
-                    pixels[x + y * width] = climate.gradient.Evaluate(World.Current.GetHeight(x, y));
+                catch (System.IndexOutOfRangeException)
+                {
+                    Debug.Log(x + ", " + y);
+                    throw;
                 }
-            }
 
-            var texture = new Texture2D(width, height);
-            texture.SetPixels(pixels);
-            texture.Apply();
-            return texture;
-        }
-
-        private void OnDrawGizmos() {
-            if (!drawSlope || World.Current == null)
-                return;
-
-            var width = World.Current.WorldParameters.Width;
-            var height = World.Current.WorldParameters.Height;
-
-            for (var y = 0; y < height - 1; y++) {
-                for (var x = 0; x < width - 1; x++) {
-                    var slope = World.Current.GetSlope(x, y);
-
-                    var startY = heightMultiplier * heightCurve.Evaluate(
-                                     Mathf.InverseLerp(
-                                         World.Current.WorldParameters.SeaLevel,
-                                         1f,
-                                         World.Current.GetHeight(x, y)
-                                     )
-                                 );
-                    var startPos = new Vector3(-(width - 1) / 2f + x, startY, (height - 1) / 2f - y);
-                    var offset = new Vector3(slopeMultiplier * slope.x, 0, -slopeMultiplier * slope.y);
-
-                    Gizmos.DrawLine(startPos, startPos + offset);
-                }
+                pixels[x + y * width] = climate.gradient.Evaluate(World.Current.GetHeight(x, y));
             }
         }
 
-        private enum DrawMode {
-            Normal,
-            Height,
-            Temperature,
-            Rain
+        var texture = new Texture2D(width, height);
+        texture.SetPixels(pixels);
+        texture.Apply();
+
+        return texture;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!drawSlope || World.Current == null)
+            return;
+
+        var width = World.Current.WorldParameters.Width;
+        var height = World.Current.WorldParameters.Height;
+
+        for (var y = 0; y < height - 1; y++)
+        {
+            for (var x = 0; x < width - 1; x++)
+            {
+                var slope = World.Current.GetSlope(x, y);
+
+                var startY = heightMultiplier * heightCurve.Evaluate(
+                    Mathf.InverseLerp(
+                        World.Current.WorldParameters.SeaLevel,
+                        1f,
+                        World.Current.GetHeight(x, y)
+                    )
+                );
+                var startPos = new Vector3(-(width - 1) / 2f + x, startY, (height - 1) / 2f - y);
+                var offset = new Vector3(slopeMultiplier * slope.x, 0, -slopeMultiplier * slope.y);
+
+                Gizmos.DrawLine(startPos, startPos + offset);
+            }
         }
     }
+
+    private enum DrawMode
+    {
+        Normal,
+        Height,
+        Temperature,
+        Rain
+    }
+}

@@ -1,79 +1,99 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
+using UnityEngine.Rendering;
 
-    public static class MeshGenerator {
-        public static Mesh[,] GenerateTerrainMesh(
-            float[,] heightMap,
-            AnimationCurve heightCurve,
-            float seaLevel,
-            float heightMultiplier
-        ) {
-            var width = heightMap.GetLength(0);
-            var height = heightMap.GetLength(1);
+public static class MeshGenerator
+{
+    private const int CHUNK_SIZE = 65535;
 
-            var topLeftX = (width - 1) / -2f;
-            var topLeftZ = (height - 1) / 2f;
+    public static Mesh GenerateTerrainMesh(float[,] heightMap, AnimationCurve heightCurve, float seaLevel,
+        float heightMultiplier)
+    {
+        var width = heightMap.GetLength(0);
+        var height = heightMap.GetLength(1);
 
-            var chunks = new[,] {{new MeshData(width, height)}};
-            var vertexIndex = 0;
+        var topLeftX = (width - 1) * -0.5f;
+        var topLeftZ = (height - 1) * 0.5f;
 
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
-                    var heightAtPoint = heightMap[x, y];
-                    var vertexHeight = heightAtPoint <= seaLevel
-                        ? 0
-                        : heightCurve.Evaluate(Mathf.InverseLerp(seaLevel, 1f, heightAtPoint)) *
-                          heightMultiplier;
-                    chunks[0, 0].vertices[vertexIndex] = new Vector3(topLeftX + x, vertexHeight, topLeftZ - y);
-                    chunks[0, 0].uvs[vertexIndex] = new Vector2(x / (float) width, y / (float) height);
+        var terrain = new MeshData(width, height);
+        var vertexIndex = 0;
 
-                    if (x < width - 1 && y < height - 1) {
-                        chunks[0, 0].AddTriangle(vertexIndex, vertexIndex + width + 1, vertexIndex + width);
-                        chunks[0, 0].AddTriangle(vertexIndex + width + 1, vertexIndex, vertexIndex + 1);
-                    }
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                var heightAtPoint = heightMap[x, y];
+                var vertexHeight = heightAtPoint <= seaLevel
+                    ? 0
+                    : heightCurve.Evaluate(Mathf.InverseLerp(seaLevel, 1f, heightAtPoint)) *
+                      heightMultiplier;
 
-                    vertexIndex++;
+                terrain.vertices[vertexIndex] = new Vector3(topLeftX + x, vertexHeight, topLeftZ - y);
+                terrain.uvs[vertexIndex] = new Vector2(x / (float) width, y / (float) height);
+
+                if (x < width - 1 && y < height - 1)
+                {
+                    terrain.AddTriangle(vertexIndex, vertexIndex + width + 1, vertexIndex + width);
+                    terrain.AddTriangle(vertexIndex + width + 1, vertexIndex, vertexIndex + 1);
                 }
-            }
 
-            var meshes = new Mesh[chunks.GetLength(0), chunks.GetLength(1)];
-            for (var i = 0; i < chunks.GetLength(0); i++) {
-                for (var j = 0; j < chunks.GetLength(1); j++) {
-                    meshes[i, j] = chunks[i, j].CreateMesh();
-                }
+                vertexIndex++;
             }
-
-            return meshes;
         }
 
-        private struct MeshData {
-            public readonly Vector3[] vertices;
-            private readonly int[] triangles;
-            public readonly Vector2[] uvs;
+        return terrain.CreateMesh();
+    }
 
-            private int triangleIndex;
+    private struct MeshData
+    {
+        public readonly Vector3[] vertices;
+        private readonly int[] triangles;
+        public readonly Vector2[] uvs;
 
-            public MeshData(int width, int height) {
-                vertices = new Vector3[width * height];
-                uvs = new Vector2[width * height];
-                triangles = new int[(width - 1) * (height - 1) * 6];
-                triangleIndex = 0;
+        private int triangleIndex;
+
+        public MeshData(int width, int height)
+        {
+            vertices = new Vector3[width * height];
+            uvs = new Vector2[width * height];
+            triangles = new int[(width - 1) * (height - 1) * 6];
+            triangleIndex = 0;
+        }
+
+        public void AddTriangle(int a, int b, int c)
+        {
+            triangles[triangleIndex] = a;
+            triangles[triangleIndex + 1] = b;
+            triangles[triangleIndex + 2] = c;
+            triangleIndex += 3;
+        }
+
+        public Mesh CreateMesh()
+        {
+            var mesh = new Mesh
+            {
+                vertices = vertices,
+                indexFormat = vertices.Length > CHUNK_SIZE ? IndexFormat.UInt32 : IndexFormat.UInt16,
+                subMeshCount = Mathf.CeilToInt((float) triangles.Length / CHUNK_SIZE),
+                uv = uvs,
+            };
+
+            var subMeshTriangles = triangles.ToList();
+
+            for (var i = 0; i < mesh.subMeshCount; i++)
+            {
+                var subMeshTrianglesCount = subMeshTriangles.Count < CHUNK_SIZE ? subMeshTriangles.Count : CHUNK_SIZE;
+                var targetTriangles = subMeshTriangles.GetRange(0, subMeshTrianglesCount).ToArray();
+
+                mesh.SetTriangles(targetTriangles, i);
+                subMeshTriangles.RemoveRange(0, subMeshTrianglesCount);
             }
 
-            public void AddTriangle(int a, int b, int c) {
-                triangles[triangleIndex] = a;
-                triangles[triangleIndex + 1] = b;
-                triangles[triangleIndex + 2] = c;
-                triangleIndex += 3;
-            }
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+            mesh.Optimize();
 
-            public Mesh CreateMesh() {
-                var mesh = new Mesh {
-                    vertices = vertices,
-                    triangles = triangles,
-                    uv = uvs
-                };
-                mesh.RecalculateNormals();
-                return mesh;
-            }
+            return mesh;
         }
     }
+}
