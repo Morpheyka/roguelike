@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6be9b004b90d24fb725acb949361b2, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: 
-  width: 128
-  height: 128
+  width: 192
+  height: 192
   heightParameters:
     octaves: 4
     persistance: 0.35
     lacunarity: 3.75
-    scale: 70
+    scale: 65
   falloffA: 2
   falloffB: 6
-  falloffMultiplier: 0.7
+  falloffMultiplier: 0.3
   normalize: 1
   rainParameters:
     octaves: 6
@@ -35,16 +35,8 @@ MonoBehaviour:
   mountainLevel: 0.65
   seaClimate: {fileID: 11400000, guid: 272deeb33df77ea43ad9e81d115afdc9, type: 2}
   mountainClimate: {fileID: 11400000, guid: 2748a0b215dda754dbf09d86804eba31, type: 2}
-  climateTable:
-  - table:
-    - {fileID: 11400000, guid: bde58731cdbc5684dbce922a9f697781, type: 2}
-    - {fileID: 11400000, guid: 0001933deca498f4d8ff8db4146ab2b0, type: 2}
-  - table:
-    - {fileID: 11400000, guid: 009eef0ac5da2454189c14b4efa1c018, type: 2}
-    - {fileID: 11400000, guid: 2b47c2c553011db41a7d0e774bcbd075, type: 2}
-  - table:
-    - {fileID: 11400000, guid: d2af167b401cdf74fbb504a4f4e5a6d8, type: 2}
-    - {fileID: 11400000, guid: e7f473fc4f87bcd4f835c3b3a7772b37, type: 2}
-  - table:
-    - {fileID: 11400000, guid: 14f4e362498122940a0fc77a015c154a, type: 2}
-    - {fileID: 11400000, guid: cd83b8a31202bce44ae0b2f61eed690b, type: 2}
+  _climateZones:
+  - {fileID: 11400000, guid: ea9fa58684b2e204e912b5fd5308d48c, type: 2}
+  - {fileID: 11400000, guid: a3055aa72ed4c99489fe9ac0ead8cab2, type: 2}
+  - {fileID: 11400000, guid: ea9a73b248d70aa4e9f34849526ef55f, type: 2}
+  - {fileID: 11400000, guid: 04b071536bc22634ba9ebb6cc226fbff, type: 2}

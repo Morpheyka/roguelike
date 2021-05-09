@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Middle
+  m_EditorClassIdentifier: Assembly-CSharp::ClimateZone
+  Climate:
+  - {fileID: 11400000, guid: 2b47c2c553011db41a7d0e774bcbd075, type: 2}
+  - {fileID: 11400000, guid: d2af167b401cdf74fbb504a4f4e5a6d8, type: 2}
