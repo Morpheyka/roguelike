@@ -1,66 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class WorldParameters : ScriptableObject
 {
-    // Size Parameters
+    public Action OnUpdateCallback { set; private get; }
 
-    [Range(16, 1024), SerializeField]
-    private int width, height;
+    // Size Parameters
+    [Range(16, 1024), SerializeField] private int width, height;
 
     public int Width => width;
     public int Height => height;
 
-
     // Height Parameters
 
-    [SerializeField]
-    private NoiseParameters heightParameters;
-
-    [Range(0, 10), SerializeField]
-    private float falloffA, falloffB;
-
-    [Range(0, 1), SerializeField]
-    private float falloffMultiplier;
-
-    [SerializeField]
-    private bool normalize;
-
+    [SerializeField] private NoiseParameters heightParameters;
+    [Range(0, 10), SerializeField] private float falloffA, falloffB;
+    [Range(0, 1), SerializeField] private float falloffMultiplier;
+    [SerializeField] private bool normalize;
 
     // Rain Parameters
 
-    [SerializeField]
-    private NoiseParameters rainParameters;
-
+    [SerializeField] private NoiseParameters rainParameters;
 
     // Temperature Parameters
 
-    [Range(0, 10), SerializeField]
-    private float tempA, tempB;
-
-    [Range(0, 1), SerializeField]
-    private float tempHeightRatio;
-
+    [Range(0, 10), SerializeField] private float tempA, tempB;
+    [Range(0, 1), SerializeField] private float tempHeightRatio;
 
     // Climate Parameters
 
-    [Range(0, 1), SerializeField]
-    private float seaLevel = .35f, mountainLevel = .65f;
+    [Range(0, 1), SerializeField] private float seaLevel = .35f, mountainLevel = .65f;
 
     public float SeaLevel => seaLevel;
     public float MountainLevel => mountainLevel;
 
-    [SerializeField]
-    private Climate seaClimate, mountainClimate;
-
-    [SerializeField]
-    private ClimateZone[] _climateZones;
-
-    public Action OnUpdateCallback { set; private get; }
-
-    private void OnUpdate() => OnUpdateCallback?.Invoke();
+    [SerializeField] private Climate seaClimate, mountainClimate;
+    [SerializeField] private ClimateZone[] _climateZones;
 
     public float[,] GetHeightMap(int seed)
     {
@@ -156,27 +132,4 @@ public class WorldParameters : ScriptableObject
 
         return climateMap;
     }
-}
-
-
-[Serializable]
-public struct NoiseParameters
-{
-    [Range(1, 8)]
-    public int octaves;
-
-    [Range(0, 1)]
-    public float persistance;
-
-    [Range(1, 5)]
-    public float lacunarity;
-
-    [Range(10, 200)]
-    public int scale;
-}
-
-[CreateAssetMenu]
-public class ClimateZone : ScriptableObject
-{
-    public Climate[] Climate;
 }
